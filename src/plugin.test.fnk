@@ -1,0 +1,41 @@
+{resolve} = import 'path'
+
+{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest/test.fnk'
+{fink} = import './plugin.fnk'
+
+
+
+describe fink, fn:
+  it 'transforms files', fn:
+    {transform} = fink _
+
+    {code, map: {sources: _, ...source_map}, ...rest} = transform
+      'foobar = 13'
+      resolve './src/test.fnk'
+
+    expect
+      {code, map: source_map, ...rest}
+      to_match_snapshot
+
+
+  it 'ignores files', fn:
+    {transform} = fink {include: './src/**/*.fnk'}
+
+    expect
+      transform 'foobar = 13', resolve './src/test.js'
+      to_match_snapshot
+
+
+  it 'throws compile errors', fn:
+    {transform} = fink {include: './src/**/*.fnk'}
+
+    filename = resolve './src/test.fnk'
+
+    expect
+      fn: transform 'foobar = "foo', resolve './src/test.fnk'
+      to_throw '${filename}:1:13
+        1| foobar = "foo
+                        ^
+
+        Unexpected end of code.
+        '

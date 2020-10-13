@@ -1,0 +1,44 @@
+{createFilter} = import '@rollup/pluginutils'
+
+{parse} = import '@fink/larix/parser.fnk'
+{generate} = import '@fink/loxia/generate.fnk'
+{null} = import '@fink/js-interop/nullish.fnk'
+{new} = import '@fink/js-interop/reflect.fnk'
+{Error} = import '@fink/js-interop/globals.fnk'
+
+
+
+transform = fn source, filename, options:
+  ast = parse source, filename
+
+  match ast:
+    {errors: [{}]}:
+      {errors: ast.errors}
+    else:
+      generate
+        ast, filename, source
+        dict:
+          babel: {babelrc: false, configFile: false}
+          import: {ext: {abs: '.js', rel: '.fnk'}}
+          ...options
+
+
+
+fink = fn options={include: './**/*.fnk'}: dict:
+  transform: fn source, id:
+    rollup_filter = createFilter options.include, options.exclude
+
+    match id:
+      rollup_filter ?:
+        {code, source_map, errors} = transform
+          source, id, {source_maps: true, ...options}
+
+        match errors:
+          --- istanbul ignore else ---
+          [{error: {}}]:
+            [{error}] = errors
+            throw new Error, error
+          else:
+            {code, map: source_map, moduleSideEffects: false}
+      else:
+        null

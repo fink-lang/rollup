@@ -1,0 +1,69 @@
+{
+  "name": "@fink/rollup",
+  "version": "0.0.0-semantically-released",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "rollup-plugin",
+    "fink-lang",
+    "fink"
+  ],
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "./": {
+      "import": "./",
+      "require": "./cjs/"
+    }
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fink-lang/rollup"
+  },
+  "bugs": "https://github.com/fink-lang/rollup/issues",
+  "homepage": "https://github.com/fink-lang/rollup",
+  "scripts": {
+    "default": "run clean test build",
+    "clean": "rimraf ./build",
+    "build": "run build:*",
+    "build:dir": "mkdir -p ./build/pkg/",
+    "build:fnk-esm": "fnk --module-type esm --src ./src --out-dir build/pkg/ --ignore './src/**/*.test.fnk'",
+    "build:fnk-cjs": "fnk --module-type cjs --src ./src --out-dir build/pkg/cjs --ignore './src/**/*.test.fnk'",
+    "build:pkg-cjs": "cp ./package-cjs.json build/pkg/cjs/package.json",
+    "build:files": "cp ./package.json ./README.md ./LICENSE ./build/pkg/",
+    "test": "run jest",
+    "jest": "jest --verbose --runInBand --no-cache ",
+    "cd": "run clean test build release",
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "@fink/cli": "^7.0.0",
+    "@fink/jest": "^6.0.1",
+    "commitizen": "^4.0.5",
+    "cz-conventional-changelog": "^3.1.0",
+    "jest-cli": "^26.2.2",
+    "npx-run": "^2.1.2",
+    "semantic-release": "^17.1.1"
+  },
+  "dependencies": {
+    "@fink/js-interop": "^2.0.0",
+    "@fink/larix": "^13.1.0",
+    "@fink/loxia": "^14.0.2",
+    "@rollup/pluginutils": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@fink/larix": ">=13.0.0",
+    "@fink/loxia": ">=14.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

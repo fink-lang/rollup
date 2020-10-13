@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fink ignores files 1`] = `null`;
+
+exports[`fink transforms files 1`] = `
+Object {
+  "code": "export const foobar = 13;",
+  "map": Object {
+    "mappings": "AAAA,aAAA,MAAM,GAAG,EAAT",
+    "names": Array [],
+    "sourcesContent": Array [
+      "foobar = 13",
+    ],
+    "version": 3,
+  },
+  "moduleSideEffects": false,
+}
+`;
