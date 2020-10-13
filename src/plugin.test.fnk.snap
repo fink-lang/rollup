@@ -4,9 +4,15 @@ exports[`fink ignores files 1`] = `null`;
 
 exports[`fink transforms files 1`] = `
 Object {
-  "code": "export const foobar = 13;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9qYW4vRGV2ZWxvcC9maW5rL3JvbGx1cC9zcmMvdGVzdC5mbmsiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsYUFBQSxNQUFNLEdBQUcsRUFBVCIsInNvdXJjZXNDb250ZW50IjpbImZvb2JhciA9IDEzIl19",
-  "map": null,
+  "code": "export const foobar = 13;",
+  "map": Object {
+    "mappings": "AAAA,aAAA,MAAM,GAAG,EAAT",
+    "names": Array [],
+    "sourcesContent": Array [
+      "foobar = 13",
+    ],
+    "version": 3,
+  },
   "moduleSideEffects": false,
 }
 `;

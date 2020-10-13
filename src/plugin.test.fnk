@@ -9,8 +9,12 @@ describe fink, fn:
   it 'transforms files', fn:
     {transform} = fink _
 
+    {code, map: {sources: _, ...source_map}, ...rest} = transform
+      'foobar = 13'
+      resolve './src/test.fnk'
+
     expect
-      transform 'foobar = 13', resolve './src/test.fnk'
+      {code, map: source_map, ...rest}
       to_match_snapshot
 
 

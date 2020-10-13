@@ -31,7 +31,7 @@ fink = fn options={include: './**/*.fnk'}: dict:
     match id:
       rollup_filter ?:
         {code, source_map, errors} = transform
-          source, id, {source_maps: 'inline', ...options}
+          source, id, {source_maps: true, ...options}
 
         match errors:
           --- istanbul ignore else ---
