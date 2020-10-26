@@ -26,7 +26,7 @@ describe fink, fn:
       to_match_snapshot
 
 
-  it 'throws compile errors', fn:
+  it 'throws parsing errors', fn:
     {transform} = fink {include: './src/**/*.fnk'}
 
     filename = resolve './src/test.fnk'
@@ -38,4 +38,21 @@ describe fink, fn:
                         ^
 
         Unexpected end of code.
+        '
+
+
+  it 'throws compile errors', fn:
+    {transform} = fink {include: './src/**/*.fnk'}
+
+    filename = resolve './src/test.fnk'
+
+    expect
+      fn: transform '123 = foo', resolve './src/test.fnk'
+      to_throw '${filename}:1:0
+        1| 123 = foo
+           ^
+
+        Unable to transform `assign =`.
+
+        TypeError: Property left of AssignmentExpression expected node to be of a type ["LVal"] but instead got "NumericLiteral"
         '
