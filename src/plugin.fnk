@@ -2,9 +2,8 @@
 
 {parse} = import '@fink/larix/parser.fnk'
 {generate} = import '@fink/loxia/generate.fnk'
+{error, is_error} = import '@fink/std-lib/error.fnk'
 {null} = import '@fink/js-interop/nullish.fnk'
-{new} = import '@fink/js-interop/reflect.fnk'
-{Error} = import '@fink/js-interop/globals.fnk'
 
 
 
@@ -35,9 +34,13 @@ fink = fn options={include: './**/*.fnk'}: dict:
 
         match errors:
           --- istanbul ignore else ---
-          [{error: {}}]:
-            [{error}] = errors
-            throw new Error, error
+          [{}]:
+            [err] = errors
+            match err:
+              is_error ?:
+                throw err
+              else:
+                throw error err.error, {stack: err.stack}
           else:
             {code, map: source_map, moduleSideEffects: false}
       else:
