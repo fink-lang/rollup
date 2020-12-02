@@ -2,7 +2,10 @@
 
 {parse} = import '@fink/larix/parser.fnk'
 {generate} = import '@fink/loxia/generate.fnk'
+
 {error, is_error} = import '@fink/std-lib/error.fnk'
+{is_empty} = import '@fink/std-lib/iter.fnk'
+
 {null} = import '@fink/js-interop/nullish.fnk'
 
 
@@ -11,19 +14,19 @@ transform = fn source, filename, options:
   ast = parse source, filename
 
   match ast:
-    {errors: [{}]}:
-      {errors: ast.errors}
-    else:
+    {errors: is_empty ?}:
       generate
         ast, filename, source
-        dict:
+        rec:
           babel: {babelrc: false, configFile: false}
-          import: {ext: {abs: '.js', rel: '.fnk'}}
+          import.ext: {abs: '.js', rel: '.fnk'}
           ...options
+    else:
+      {errors: ast.errors}
 
 
 
-fink = fn options={include: './**/*.fnk'}: dict:
+fink = fn options={include: './**/*.fnk'}: rec:
   transform: fn source, id:
     rollup_filter = createFilter options.include, options.exclude
 
@@ -33,15 +36,15 @@ fink = fn options={include: './**/*.fnk'}: dict:
           source, id, {source_maps: true, ...options}
 
         match errors:
-          --- istanbul ignore else ---
-          [{}]:
+          is_empty ?:
+             {code, map: source_map, moduleSideEffects: false}
+          else:
             [err] = errors
             match err:
               is_error ?:
                 throw err
               else:
                 throw error err.error, {stack: err.stack}
-          else:
-            {code, map: source_map, moduleSideEffects: false}
+
       else:
         null
